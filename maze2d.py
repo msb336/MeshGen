@@ -1,8 +1,7 @@
 import numpy
 from numpy.random import randint as rand
 import pptk
-from openmesh import *
-
+import collections
 
 import matplotlib.pyplot as pyplot
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
@@ -30,11 +29,18 @@ def appendVerticesIfUnique(center_point, vertices):
 
     vertices = numpy.append(vertices, points, axis=0)
     return vertices
-
+def appendIfUnique(new_values, array):
+	index_to_add = new_values
+	# print("checking if unique. index size {}".format(array.shape[0]))
+	# for i in range(array.shape[0]):
+		# for row in range(new_values.shape[0]):
+			# value = new_values[row,:]
+			# if collections.Counter(value.reshape(3,)) == collections.Counter(array[i,:].reshape(3,)):
+				# index_to_add = np.delete(index_to_add, row, 0)
+	array = numpy.append(array, index_to_add, axis=0)
+	return array
+		
 def voxelToMesh(grid):
-    #cube_connections = numpy.array(([0,1,2,3], [0,4,7,3], [0,1,5,4], [1,2,6,5], [2,3,7,6], [7,4,5,6]), 
-    #                               ndmin=2, dtype=int)
-
     cube_connections = numpy.array(([0,1,2], [0,2,3],   # Bottom
                                     [0,3,7], [0,4,7],   # Front
                                     [4,5,7], [5,6,7],   # Top
@@ -42,26 +48,32 @@ def voxelToMesh(grid):
                                     [0,1,5], [0,4,5],   # Left
                                     [3,2,6], [3,7,6]    # Right
                                     ), ndmin=2, dtype=int)
+    # cube_normals = numpy.array(([0,0,-1], [0,0,-1],
+				# [1,0,0], [1,0,0],
+				# [0,0,1], [0,0,1],
+				# [-1,0,0], [-1,0,0],
+				# [0,-1,0], [0,-1,0],
+				# [0,1,0], [0,1,0]), ndmin=2)
 
     vertices = numpy.empty((0,3))
     index = numpy.empty((0,3), dtype=int)
+    normals= numpy.empty((0,3))
     for i in range(grid.shape[0]):
         for j in range(grid.shape[1]):
             for k in range(grid.shape[2]):
                 if not grid[i,j,k]:
                     vertices = appendVerticesIfUnique(numpy.array([i,j,k], ndmin=2), vertices)
-                    index = numpy.append(index, vertices.shape[0]+cube_connections, axis=0)
+                    index = appendIfUnique(vertices.shape[0]+cube_connections, index)
     return vertices, index
 
-def writeObj(vertex, index, filename):
+def writeObj(vertex, index, normals, filename):
     f = open(filename, 'w')
     print(index.shape)
     for i in range(vertex.shape[0]):
-        
         f.write("v {} {} {}\n".format(vertex[i,0], vertex[i,1], vertex[i,2]))
     for j in range(index.shape[0]):
-        f.write("s {}\n".format(j+1))
-        f.write("f {} {} {}\n".format(index[j,0]+1, index[j,1]+1, index[j,2]+1))
+        f.write("f {} {} {}\n".format(index[j,0], index[j,1], index[j,2]))
+
     f.close()                    
 
 
@@ -101,5 +113,5 @@ def generateMaze(width=81, height=51, depth=21, complexity=.75, density=.9):
 maze = generateMaze(20,10,10, 0.2, 0.99)
 vertices, index = voxelToMesh(maze)
 
-scale = 100
-writeObj(vertices*scale, index, "maze.obj")
+scale = 300
+writeObj(vertices*scale, index, normals, "maze.obj")
