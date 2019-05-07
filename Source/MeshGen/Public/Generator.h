@@ -1,10 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include <fstream>
-#include <sstream>
-#include <string>
-
 #include "CommonStructs.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -17,13 +13,17 @@ class MESHGEN_API AGenerator : public AActor
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		Vertices vertices_;
+		TArray<FVector> vertices_;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		UV uvs_;
+		TArray<FVector2D> uvs_;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		Triangles index_;
+		TArray<int32> index_;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
 		bool update_mesh_ = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
+		int section_count_{ 0 };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
+		FVector2D boundary_;
 
 public:	
 	// Sets default values for this actor's properties
@@ -40,15 +40,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Procedural Generation")
 		FString generateMesh();
 	UFUNCTION(BlueprintCallable, Category = "Procedural Generation")
-		void update(const FVector& player_position);
+		FString update(const FVector& player_position);
 private:
-	int counter_{ 0 };
-	std::array<float, 2> bounds_{ 50, 50 };
+	int row_count_{ 0 }, column_count_{ 0 };
+	std::array<float, 2> bounds_{ 1500, 1500 };
 	void generateNewPoints();
-	std::string loadMesh(const std::string& );
+	std::string loadMesh( );
 	std::array<float, 2> distanceFromBoundary(const FVector&);
 
-	std::vector<std::vector<TriangularMesh>> chunks;
+	//std::vector<std::vector<TriangularMesh>> chunks;
+	std::string mesh_location_{ "C:\\Users\\v-mattbr\\repos\\unreal-envs\\ProceduralMesh\\Plugins\\MeshGen\\Content\\MeshComponents\\" };
 
 
 	
