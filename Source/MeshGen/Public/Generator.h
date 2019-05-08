@@ -20,8 +20,8 @@ protected:
 		TArray<int32> index_;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
 		bool update_mesh_ = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		int section_count_{ 0 };
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
+	//	int section_count_{ 0 };
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
 		FVector2D boundary_;
 
@@ -39,19 +39,34 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Procedural Generation")
 		FString generateMesh();
-	UFUNCTION(BlueprintCallable, Category = "Procedural Generation")
-		FString update(const FVector& player_position);
+		
+	UFUNCTION(BlueprintImplementableEvent, Category = "Procedural Generation")
+		void deleteTile(const Tile& tile_to_delete);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Procedural Generation")
+		void deleteTile(const Tile& tile_to_delete);
 private:
-	int row_count_{ 0 }, column_count_{ 0 };
-	std::array<float, 2> bounds_{ 1500, 1500 };
-	void generateNewPoints();
-	std::string loadMesh( );
-	std::array<float, 2> distanceFromBoundary(const FVector&);
-
-	//std::vector<std::vector<TriangularMesh>> chunks;
-	std::string mesh_location_{ "C:\\Users\\v-mattbr\\repos\\unreal-envs\\ProceduralMesh\\Plugins\\MeshGen\\Content\\MeshComponents\\" };
 
 
 	
+	std::string loadMesh( );
+	std::array<float, 2> distanceFromBoundary(const FVector&);
+	TileSet whichTiles();
+
+	void determineLoadingAction(const TileSet& desired_tiles,
+								TileSet& unbuilt_tiles,
+								TileSet& obscelete_tiles);
+	void loadTiles(const TileSet& tiles_to_build);
+	void getPlayerLocation();
+	void generateNewPoints();
+	void update();
+
+private:
+	int row_count_{ 0 }, column_count_{ 0 };
+	MeshParameters parameters_;
+	std::array<float, 2> bounds_{ 1500, 1500 };
+	Position player_location_;
+	TileSet loaded_tiles_;
+	//std::vector<std::vector<TriangularMesh>> chunks;
+	std::string mesh_location_{ "C:\\Users\\v-mattbr\\repos\\unreal-envs\\ProceduralMesh\\Plugins\\MeshGen\\Content\\MeshComponents\\" };
 	
 };
