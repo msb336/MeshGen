@@ -12,12 +12,19 @@
 	"SupportURL": "",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
-	"Installed": false,
-	"Modules": [
-		{
-			"Name": "MeshGen",
-			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
-		}
-	]
+  "Installed": false,
+
+  "Modules": [
+    {
+      "Name": "MeshGen",
+      "Type": "Runtime",
+      "LoadingPhase": "PreLoadingScreen"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "ProceduralMeshComponent",
+      "Enabled":  true
+    }
+  ]
 }

@@ -11,20 +11,6 @@ class MESHGEN_API AGenerator : public AActor
 {
 	GENERATED_BODY()
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		TArray<FVector> vertices_;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		TArray<FVector2D> uvs_;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		TArray<int32> index_;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		bool update_mesh_ = false;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-	//	int section_count_{ 0 };
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Generation")
-		FVector2D boundary_;
-
 public:	
 	// Sets default values for this actor's properties
 	AGenerator();
@@ -36,37 +22,37 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable, Category = "Procedural Generation")
-		FString generateMesh();
-		
-	UFUNCTION(BlueprintImplementableEvent, Category = "Procedural Generation")
-		void deleteTile(const Tile& tile_to_delete);
-	UFUNCTION(BlueprintImplementableEvent, Category = "Procedural Generation")
-		void deleteTile(const Tile& tile_to_delete);
 private:
+	void loadMesh(int index);
 
 
-	
-	std::string loadMesh( );
-	std::array<float, 2> distanceFromBoundary(const FVector&);
-	TileSet whichTiles();
 
-	void determineLoadingAction(const TileSet& desired_tiles,
-								TileSet& unbuilt_tiles,
-								TileSet& obscelete_tiles);
-	void loadTiles(const TileSet& tiles_to_build);
+	std::set<int> whichTiles();
+	void determineLoadingAction(const std::set<int>& desired_tiles,
+								std::set<int>& unbuilt_tiles,
+								std::set<int>& obscelete_tiles);
+	void loadTiles(const std::set<int>& tiles_to_build);
+	void renderMeshSection(const int& section);
+	void deconstructMeshSection(const int& section);
+
 	void getPlayerLocation();
-	void generateNewPoints();
 	void update();
+
+
+
+private:
+	UPROPERTY() UProceduralMeshComponent* procedural_mesh_component_;
+	UPROPERTY() UMaterialInterface* material_;
 
 private:
 	int row_count_{ 0 }, column_count_{ 0 };
 	MeshParameters parameters_;
 	std::array<float, 2> bounds_{ 1500, 1500 };
-	Position player_location_;
-	TileSet loaded_tiles_;
-	//std::vector<std::vector<TriangularMesh>> chunks;
+	Position player_location_{ 0,0,0 };
+	std::set<int> loaded_tiles_;
+	ProceduralMesh procedural_mesh_;
 	std::string mesh_location_{ "C:\\Users\\v-mattbr\\repos\\unreal-envs\\ProceduralMesh\\Plugins\\MeshGen\\Content\\MeshComponents\\" };
+	std::string filename_{ "C:\\Users\\v-mattbr\\repos\\unreal-envs\\ProceduralMesh\\Plugins\\MeshGen\\Content\\MeshComponents\\meshinfo" };
 	
+	std::array<int, 2> player_tile_;
 };

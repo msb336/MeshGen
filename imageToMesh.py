@@ -12,15 +12,19 @@ scale = numpy.array([float(s) for s in re.findall(r'-?\d+\.?\d*', sys.argv[2])])
 chunk_size = int(sys.argv[3])
 
 image_file = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
-if image_path.endswith(".png"):
-    b,g,r,a = cv2.split(image_file)
-    if numpy.all((b+g+r) == 0):
-        gray_image = a
-        print("image file is alpha channel")
-    else:
-        gray_image = cv2.cvtColor(image_file, cv2.COLOR_BGR2GRAY)
+print("Shape of image: {}".format(image_file.shape))
+if len(image_file.shape) == 3:
+	if image_file.shape[2] == 4:
+		b,g,r,a = cv2.split(image_file)
+		if numpy.all((b+g+r) == 0):
+			gray_image = a
+			print("image file is alpha channel")
+		else:
+			gray_image = cv2.cvtColor(image_file, cv2.COLOR_BGR2GRAY)
+	else:
+		gray_image = cv2.cvtColor(image_file, cv2.COLOR_BGR2GRAY)
 else:
-    gray_image = cv2.cvtColor(image_file, cv2.COLOR_BGR2GRAY)
+	gray_image = image_file #cv2.cvtColor(image_file, cv2.COLOR_BGR2GRAY)
 
 img = numpy.asarray(gray_image, dtype=float)
 image_set = splitImage(img, chunk_size)

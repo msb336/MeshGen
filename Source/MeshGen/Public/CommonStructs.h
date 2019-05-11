@@ -5,7 +5,10 @@
 #include <sstream>
 #include <string>
 #include <set>
+#include <vector>
+#include <cmath>
 
+#include "ProceduralMeshComponent.h"
 struct MeshParameters {
 	float scale_x;
 	float scale_y;
@@ -21,20 +24,13 @@ struct Position {
 	float z;
 };
 
-using TileArray = std::array<int, 2>;
-using Tile = int;
-using TileSet = std::set<Tile>;
-//using Vertices = TArray<FVector>;
-//using Triangles = TArray<int32>;
-//using UV = TArray<FVector2D>;
-//
-//struct TriangularMesh {
-//	Vertices vertices;
-//	Triangles triangles;
-//	UV uvs;
-//};
-//
-//struct SectionBoundary {
-//	std::array<float, 2> lower;
-//	std::array<float, 2> upper;
-//};
+struct MeshSection {
+	TArray<FVector> vertex_list;
+	TArray<int32> triangle_list;
+	TArray < FVector > normal_list;
+	TArray < FVector2D > uv;
+	TArray<FLinearColor> color_list;
+	TArray < FProcMeshTangent > tangents;
+};
+
+typedef std::vector<MeshSection> ProceduralMesh;
