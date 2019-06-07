@@ -24,9 +24,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 private:
 	void loadMesh(int index);
-
-
-
 	std::set<int> whichTiles();
 	void determineLoadingAction(const std::set<int>& desired_tiles,
 								std::set<int>& unbuilt_tiles,
@@ -46,7 +43,7 @@ private:
 
 private:
 	int row_count_{ 0 }, column_count_{ 0 };
-	MeshParameters parameters_;
+	ProceduralParameters parameters_;
 	std::array<float, 2> bounds_{ 1500, 1500 };
 	Position player_location_{ 0,0,0 };
 	std::set<int> loaded_tiles_;

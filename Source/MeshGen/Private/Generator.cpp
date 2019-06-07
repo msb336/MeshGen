@@ -100,11 +100,6 @@ std::set<int> AGenerator::whichTiles()
 		}
 	}
 
-	//if (player_tile_[0] >= 0 && player_tile_[0] < parameters_.rows &&
-	//	player_tile_[1] >= 0 && player_tile_[1] < parameters_.columns)
-	//{
-	//	desired_tiles.insert(int{ player_tile_[0]+parameters_.rows * player_tile_[1]});
-	//}
 	return desired_tiles;
 }
 
@@ -137,19 +132,16 @@ void AGenerator::determineLoadingAction(const std::set<int>& desired_tiles,
 
 void AGenerator::loadTiles(const std::set<int>& tiles_to_build)
 {
-	//std::string debug_output{ "loaded tiles:" };
 	for (std::set<int>::const_iterator index = tiles_to_build.begin(); index != tiles_to_build.end(); ++index) {
 		int i = *index % parameters_.rows;
 		int j = int ( *index / parameters_.rows);
 		renderMeshSection(*index);
-		//debug_output += " " + std::to_string(*index);
 	}
-	//UE_LOG(LogTemp, Warning, TEXT(debug_output.c_str()));
-
 }
 
 void AGenerator::update()
 {
+	////////// Think //////////
 	// Get Player Location
 	getPlayerLocation();
 
@@ -160,14 +152,20 @@ void AGenerator::update()
 	std::set<int> tiles_to_delete, tiles_to_load;
 	determineLoadingAction(desired_tiles, tiles_to_load, tiles_to_delete);
 
-	// Load new tiles
-	loadTiles(tiles_to_load);
+
+
+
+	////////// Act ////////////
+	// Load tiles into memory
+	// loadTilesIntoMemory(tiles_to_load)
+
+	// Render new tiles
+	loadTiles(tiles_to_load); // renderTiles(tiles_to_render)
 
 	// delete old tiles
 	for (std::set<int>::const_iterator index = tiles_to_delete.begin(); index != tiles_to_delete.end(); ++index) {
 		deconstructMeshSection(*index);
 	}
-	//UE_LOG(LogTemp, Warning, TEXT(debug_output.c_str()));
 
 }
 
@@ -210,8 +208,6 @@ void AGenerator::loadMesh(int one_dimensional_index)
 
 			//Placeholder for actual datawrite:
 			procedural_mesh_[one_dimensional_index].normal_list.Add(FVector(0, 0, 1));
-			
-			
 			procedural_mesh_[one_dimensional_index].tangents.Add(FProcMeshTangent(0, 0, 0));
 
 
