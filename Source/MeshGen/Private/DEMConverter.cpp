@@ -77,7 +77,7 @@ void DEMConverter::loadTilesAsync(const TileList& tiles_to_load)
 						ss >> color[i];
 					}
 					procedural_mesh_[tile].color_list.Add(FLinearColor(color[0], color[1], color[2], color[3]));
-					//procedural_mesh_[tile].color_list.Add(FLinearColor::Red);
+					//procedural_mesh_[tile].color_list.Add(FLinearColor::Red);	
 				}
 				else if (type == "f")
 				{
