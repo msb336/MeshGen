@@ -1,23 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "CoreMinimal.h"
 #include "GeneratorBase.h"
-#include "DEMConverter.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class MESHGEN_API ADEMConverter : public AGeneratorBase
+class DEMConverter : public GeneratorBase
 {
-	GENERATED_BODY()
-
+public:
+	DEMConverter(const GeneratorBase::ConfigurationSettings* config_file);
 
 private:
-	virtual void loadTilesAsync(const TileList& tiles_to_load) override;
-	virtual void getParametersFromConfig(const std::string& config_file) override;
-
-private :
-	std::string file_location_;
+	virtual void loadTilesAsync(const TileList&) override;
+	//virtual void getParametersFromConfig(const std::string& config_file) override;
 };

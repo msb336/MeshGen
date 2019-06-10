@@ -2,62 +2,37 @@
 
 #pragma once
 #include "CommonStructs.h"
-#include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "GeneratorBase.generated.h"
 
-UCLASS()
-class MESHGEN_API AGeneratorBase : public AActor
+class GeneratorBase
 {
-	GENERATED_BODY()
-
-private:
-	struct RenderingActions {
-		TileList load;
-		TileList render;
-		TileList unload;
-		TileList derender;
+public:
+	enum GENERATORTYPE
+	{
+		DEM,
+		PROCEDURAL,
+		IMAGE,
+		GAN,
+		EMPTY
+	};
+	struct ConfigurationSettings
+	{
+		std::string config_file;
+		GeneratorBase::GENERATORTYPE generator_type = GeneratorBase::GENERATORTYPE::EMPTY;
 	};
 
 public:	
 	// Sets default values for this actor's properties
-	AGeneratorBase();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	GeneratorBase();
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	virtual void loadTilesAsync(const TileList& tiles_to_load);
-	virtual void getParametersFromConfig(const std::string& config_file);
-
-private:
-	void update();
-	void getPlayerLocation();
-	RenderingActions getRenderingActions();
-	void findAdjacentTiles(TileList& adjacent_tiles, const int& level_of_adjacency);
-
-
-	void renderTilesAsync(const TileList& tiles_to_render);
-	void derenderTilesAsync(const TileList& tiles_to_render);
-	void unloadTilesAsync(const TileList& tiles_to_load);
-
-
-	void inverseIntersection(const TileList& a, const TileList& b, TileList& unique_to_a, TileList& unique_to_b);
-
-protected:
-	ProceduralParameters* procedural_parameters_;
-	Position player_location_;
-	Tile2d player_tile_;
-
-	TileList loaded_tiles_;
-	TileList rendered_tiles_;
+	void generateAndUnloadTiles(const RenderingActions& rendering_action);
+	ProceduralParameters* procedural_parameters_ = new ProceduralParameters;
 	ProceduralMesh procedural_mesh_;
 
 private:
-	UPROPERTY() UProceduralMeshComponent* procedural_mesh_component_;
-	UPROPERTY() UMaterialInterface* material_;
+	void unloadTilesAsync(const TileList& tiles_to_load);
+	
+	
 
 };

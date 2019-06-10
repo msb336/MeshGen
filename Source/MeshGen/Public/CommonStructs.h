@@ -9,6 +9,9 @@
 #include <cmath>
 
 #include "ProceduralMeshComponent.h"
+
+
+
 struct ProceduralParameters {
 	float scale_x;
 	float scale_y;
@@ -17,6 +20,7 @@ struct ProceduralParameters {
 	int tile_size;
 	int load_adjacency = 2;
 	int render_adjacency = 1;
+	std::string file_location;
 };
 struct Position {
 	Position(float xx, float yy, float zz) : x{ xx }, y{ yy }, z{ zz } {}
@@ -54,3 +58,11 @@ struct Tile2d {
 
 typedef std::vector<MeshSection> ProceduralMesh;
 typedef std::set<int> TileList;
+
+
+struct RenderingActions {
+	TileList load;
+	TileList render;
+	TileList unload;
+	TileList derender;
+};
