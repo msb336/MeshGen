@@ -26,6 +26,8 @@ DEMConverter::DEMConverter(const GeneratorBase::ConfigurationSettings* configura
 		if (type == "rows:") { ss >> procedural_parameters_->rows; }
 		if (type == "columns:") { ss >> procedural_parameters_->columns; }
 		if (type == "chunk_size:") { ss >> procedural_parameters_->tile_size; }
+		if (type == "load_adjacency:") { ss >> procedural_parameters_->load_adjacency; }
+		if (type == "render_adjacency:") { ss >> procedural_parameters_->render_adjacency; }
 	}
 	procedural_mesh_.resize(procedural_parameters_->rows * procedural_parameters_->columns);
 }
@@ -35,14 +37,13 @@ void DEMConverter::loadTilesAsync(const TileList& tiles_to_load)
 {
 	for (auto tile : tiles_to_load)
 	{
-		if (procedural_mesh_[tile].vertex_list.Num() < 1)
+		if (!procedural_mesh_[tile].populated)
 		{
 			std::string local_name = "image_mesh" + std::to_string(tile) + ".obj";
 			std::string filename = procedural_parameters_->file_location + local_name;
 
 			std::string line;
 			std::ifstream objfile(filename);
-			//std::string return_text = std::string("No file named ") + filename;
 
 			float max_x{ 0 }, max_y{ 0 };
 
@@ -77,7 +78,7 @@ void DEMConverter::loadTilesAsync(const TileList& tiles_to_load)
 						ss >> color[i];
 					}
 					procedural_mesh_[tile].color_list.Add(FLinearColor(color[0], color[1], color[2], color[3]));
-					//procedural_mesh_[tile].color_list.Add(FLinearColor::Red);	
+					
 				}
 				else if (type == "f")
 				{
@@ -97,6 +98,7 @@ void DEMConverter::loadTilesAsync(const TileList& tiles_to_load)
 				}
 
 			}
+			procedural_mesh_[tile].populated = true;
 		}
 	}
 }

@@ -42,7 +42,7 @@ private:
 	std::unique_ptr<GeneratorBase>  generator_;
 	GeneratorFactory* generator_factory_ = new GeneratorFactory;
 	std::string configuration_file_ = "MeshGen.ini";
-	GeneratorBase::ConfigurationSettings* configuration_settings_ = new GeneratorBase::ConfigurationSettings;
+	GeneratorBase::ConfigurationSettings* configuration_settings_;
 
 	Position player_location_;
 	Tile2d player_tile_;

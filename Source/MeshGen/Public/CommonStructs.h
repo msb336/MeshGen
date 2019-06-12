@@ -15,6 +15,7 @@
 struct ProceduralParameters {
 	float scale_x;
 	float scale_y;
+	float scale_z;
 	int rows;
 	int columns;
 	int tile_size;
@@ -28,6 +29,7 @@ struct Position {
 	float x;
 	float y;
 	float z;
+	inline Position operator+(Position p2) { return Position(x + p2.x, y + p2.y, z + p2.z); };
 };
 
 struct MeshSection {
@@ -37,11 +39,13 @@ struct MeshSection {
 	TArray < FVector2D > uv;
 	TArray<FLinearColor> color_list;
 	TArray < FProcMeshTangent > tangents;
+	bool populated{ false };
 	inline void clear() 
 	{ 
 		vertex_list.Empty(); triangle_list.Empty();
 		normal_list.Empty(); uv.Empty();
 		color_list.Empty(); tangents.Empty();
+		populated = false;
 	}
 };
 
@@ -53,6 +57,7 @@ struct Tile2d {
 	inline Tile2d operator+(Tile2d t2) { return Tile2d{ x + t2.x, y + t2.y }; };
 	inline Tile2d operator*(float mult) { return Tile2d{ int(x*mult), int(y*mult) }; };
 	inline void operator+=(Tile2d t2) { x += t2.x; y += t2.y; };
+	inline bool valid() { return (x > 0 && y > 0); };
 };
 
 

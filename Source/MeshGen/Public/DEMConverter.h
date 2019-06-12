@@ -10,5 +10,4 @@ public:
 
 private:
 	virtual void loadTilesAsync(const TileList&) override;
-	//virtual void getParametersFromConfig(const std::string& config_file) override;
 };

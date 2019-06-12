@@ -21,6 +21,7 @@ AMeshGenerator::AMeshGenerator()
 
 void AMeshGenerator::loadFromConfig()
 {
+	std::string config{ "" }, generator_type{ "EMPTY" };
 	std::string line;
 	std::string configuration_fullpath = TCHAR_TO_UTF8(*FPaths::ProjectConfigDir()) + configuration_file_;
 	std::ifstream objfile(configuration_fullpath);
@@ -30,10 +31,15 @@ void AMeshGenerator::loadFromConfig()
 		std::string type;
 		ss >> type;
 		if (type == "settings_file:") 
-		{ ss >> configuration_settings_->config_file; }
+		{
+			ss >> config;
+		}
 		if (type == "generator_type:") 
-			{ int generator_type; ss >> generator_type; configuration_settings_->generator_type = static_cast<GeneratorBase::GENERATORTYPE>(generator_type); }
+		{
+			ss >> generator_type;
+		}
 	}
+	configuration_settings_ = new GeneratorBase::ConfigurationSettings{ generator_type, config };
 	if (configuration_settings_->generator_type != GeneratorBase::GENERATORTYPE::EMPTY) {
 		generator_ = generator_factory_->createGenerator(configuration_settings_);
 	}
@@ -100,15 +106,17 @@ void AMeshGenerator::findAdjacentTiles(TileList& adjacent_tiles, const int& leve
 		for (int i = -level_of_adjacency; i < level_of_adjacency; i++)
 		{
 			
-			UE_LOG(LogTemp, Log, TEXT("Attemping to add (%d, %d)"), position.x, position.y);
 			if (position.x >= 0 && position.x < generator_->procedural_parameters_->rows &&
 				position.y >= 0 && position.y < generator_->procedural_parameters_->columns)
 			{
-				UE_LOG(LogTemp, Log, TEXT("success"));
-				adjacent_tiles.insert(int{ position.x + generator_->procedural_parameters_->rows * position.y });
+				adjacent_tiles.insert(generator_->tileSubscriptToIndex(position));
 			}
 			position += dir;
 		}
+	}
+	if (level_of_adjacency > 1)
+	{
+		findAdjacentTiles(adjacent_tiles, level_of_adjacency - 1);
 	}
 
 }
@@ -132,23 +140,26 @@ void AMeshGenerator::renderTilesAsync(const TileList& tiles_to_render)
 {
 	for (auto tile : tiles_to_render)
 	{
-		UE_LOG(LogTemp, Log, TEXT("rendering tile %d"), tile);
-		if (generator_->procedural_mesh_[tile].vertex_list.Num() > 1)
+		if (tile >= 0)
 		{
-			procedural_mesh_component_->SetMaterial(tile, material_);
-			procedural_mesh_component_->CreateMeshSection_LinearColor(tile,
-				generator_->procedural_mesh_[tile].vertex_list,
-				generator_->procedural_mesh_[tile].triangle_list,
-				TArray < FVector >(),
-				TArray < FVector2D >(),
-				generator_->procedural_mesh_[tile].color_list,
-				TArray < FProcMeshTangent >(),
-				true);
-			rendered_tiles_.insert(tile);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Tile in section %d is not loaded into memory"), tile);
+			UE_LOG(LogTemp, Log, TEXT("rendering tile %d"), tile);
+			if (generator_->procedural_mesh_[tile].populated)
+			{
+				procedural_mesh_component_->SetMaterial(tile, material_);
+				procedural_mesh_component_->CreateMeshSection_LinearColor(tile,
+					generator_->procedural_mesh_[tile].vertex_list,
+					generator_->procedural_mesh_[tile].triangle_list,
+					TArray < FVector >(),
+					TArray < FVector2D >(),
+					generator_->procedural_mesh_[tile].color_list,
+					TArray < FProcMeshTangent >(),
+					true);
+				rendered_tiles_.insert(tile);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Tile in section %d is not loaded into memory"), tile);
+			}
 		}
 	}
 }
@@ -157,8 +168,19 @@ void AMeshGenerator::derenderTilesAsync(const TileList& tiles_to_derender)
 {
 	for (auto tile : tiles_to_derender)
 	{
-		procedural_mesh_component_->ClearMeshSection(tile);
+		//procedural_mesh_component_->ClearMeshSection(tile);
+
+		//Super hacky
+		procedural_mesh_component_->CreateMeshSection_LinearColor(tile,
+			TArray<FVector>(),
+			TArray<int32>(),
+			TArray < FVector >(),
+			TArray < FVector2D >(),
+			TArray<FLinearColor>(),
+			TArray < FProcMeshTangent >(),
+			true);
 		rendered_tiles_.erase(tile);
+		
 	}
 
 }

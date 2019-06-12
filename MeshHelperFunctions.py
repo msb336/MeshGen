@@ -28,13 +28,6 @@ def surface(image, filename, scale =[1,1,1], offset=[0,0], reverse=False):
 
     connections = numpy.array(([0,ncol,1], [1,ncol, ncol+1]), ndmin=2, dtype=int)
     vertices = imageToXYZ(image, scale) + numpy.array((offset), ndmin=2)
-    # if numpy.amax(numpy.abs(vertices[:,2])):
-        # color = vertices[:,2] / numpy.amax(numpy.abs(vertices[:,2]))
-    # else:
-        # color = vertices[:,2]*0
-        # print("we here")
-        # input()
-    
 
     if reverse:
         vertices[:,2] = numpy.amax(vertices[:,2]) - vertices[:,2]
