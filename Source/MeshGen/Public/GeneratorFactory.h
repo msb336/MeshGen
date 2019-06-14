@@ -17,7 +17,7 @@ public:
 			return std::unique_ptr<SimpleGenerator>(new SimpleGenerator(generator_settings));
 			break;
 		default:
-			throw std::invalid_argument("ya shit's busted");
+			throw std::invalid_argument("generator type is unknown");
 		}
 	}
 };

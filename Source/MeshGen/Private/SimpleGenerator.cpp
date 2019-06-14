@@ -1,16 +1,4 @@
 #include "SimpleGenerator.h"
-
-//SimpleGenerator::SimpleGenerator(const GeneratorBase::ConfigurationSettings* configuration_settings)
-//{
-//	procedural_parameters_->scale_x = 200;
-//	procedural_parameters_->scale_y = 200;
-//	procedural_parameters_->rows = 1000;
-//	procedural_parameters_->columns = 1000;
-//	procedural_parameters_->tile_size = 30;
-//	procedural_parameters_->load_adjacency = 2;
-//	procedural_parameters_->render_adjacency = 1;
-//	procedural_mesh_.resize(procedural_parameters_->rows * procedural_parameters_->columns);
-//}
 void SimpleGenerator::loadTilesAsync(const TileList& tiles)
 {
 	for (auto tile : tiles)
