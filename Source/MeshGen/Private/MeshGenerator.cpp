@@ -9,6 +9,8 @@ AMeshGenerator::AMeshGenerator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialOb(TEXT("Material'/MeshGen/generated_material.generated_material'"));
+	//static ConstructorHelpers::FObjectFinder<UMaterial> MaterialOb(TEXT("Material'/Game/StarterContent/Materials/M_Rock_Basalt.M_Rock_Basalt'"));
+
 	
 	material_ = MaterialOb.Object; 
 
@@ -153,7 +155,8 @@ void AMeshGenerator::renderTilesAsync(const TileList& tiles_to_render)
 					generator_->procedural_mesh_[tile].vertex_list,
 					generator_->procedural_mesh_[tile].triangle_list,
 					TArray < FVector >(),
-					TArray < FVector2D >(),
+					//TArray < FVector2D >(),
+					generator_->procedural_mesh_[tile].uv,
 					generator_->procedural_mesh_[tile].color_list,
 					TArray < FProcMeshTangent >(),
 					true);

@@ -13,15 +13,15 @@
 
 
 struct ProceduralParameters {
-	float scale_x;
-	float scale_y;
-	float scale_z;
-	int rows;
-	int columns;
-	int tile_size;
-	int load_adjacency = 2;
-	int render_adjacency = 1;
-	std::string file_location;
+	float scale_x{ 1 };
+	float scale_y{ 1 };
+	float scale_z{ 1 };
+	int rows{ 10 };
+	int columns{ 10 };
+	int tile_size{ 10 };
+	int load_adjacency{ 2 };
+	int render_adjacency{ 1 };
+	std::string file_location{ "" };
 };
 struct Position {
 	Position(float xx, float yy, float zz) : x{ xx }, y{ yy }, z{ zz } {}
@@ -33,12 +33,12 @@ struct Position {
 };
 
 struct MeshSection {
-	TArray<FVector> vertex_list;
-	TArray<int32> triangle_list;
-	TArray < FVector > normal_list;
-	TArray < FVector2D > uv;
-	TArray<FLinearColor> color_list;
-	TArray < FProcMeshTangent > tangents;
+	TArray<FVector> vertex_list{};
+	TArray<int32> triangle_list{};
+	TArray < FVector > normal_list{};
+	TArray < FVector2D > uv{};
+	TArray<FLinearColor> color_list{};
+	TArray < FProcMeshTangent > tangents{};
 	bool populated{ false };
 	inline void clear() 
 	{ 

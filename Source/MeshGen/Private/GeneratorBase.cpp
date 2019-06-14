@@ -6,14 +6,6 @@ GeneratorBase::GeneratorBase(const GeneratorBase::ConfigurationSettings* configu
 {
 	std::string line;
 	std::ifstream objfile(configuration_settings->config_file);
-	procedural_parameters_->file_location =
-		configuration_settings->config_file.substr(0, configuration_settings->config_file.find_last_of("\\/"));
-#ifdef WIN32
-	procedural_parameters_->file_location += "\\";
-#else
-	procedural_parameters_->file_location += "/";
-#endif
-
 
 	while (getline(objfile, line))
 	{
