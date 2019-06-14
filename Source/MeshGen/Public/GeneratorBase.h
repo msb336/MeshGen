@@ -32,7 +32,7 @@ public:
 
 public:	
 	// Sets default values for this actor's properties
-	GeneratorBase();
+	GeneratorBase(const GeneratorBase::ConfigurationSettings* configuration_settings);
 	Tile2d tileIndexToSubscript(const int& index);
 	int tileSubscriptToIndex(const Tile2d& tile);
 	Position tileIndexToPosition(const int& index);

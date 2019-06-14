@@ -1,16 +1,16 @@
 #include "SimpleGenerator.h"
 
-SimpleGenerator::SimpleGenerator(const GeneratorBase::ConfigurationSettings* configuration_settings)
-{
-	procedural_parameters_->scale_x = 50;
-	procedural_parameters_->scale_y = 50;
-	procedural_parameters_->rows = 1000;
-	procedural_parameters_->columns = 1000;
-	procedural_parameters_->tile_size = 20;
-	procedural_parameters_->load_adjacency = 2;
-	procedural_parameters_->render_adjacency = 1;
-	procedural_mesh_.resize(procedural_parameters_->rows * procedural_parameters_->columns);
-}
+//SimpleGenerator::SimpleGenerator(const GeneratorBase::ConfigurationSettings* configuration_settings)
+//{
+//	procedural_parameters_->scale_x = 200;
+//	procedural_parameters_->scale_y = 200;
+//	procedural_parameters_->rows = 1000;
+//	procedural_parameters_->columns = 1000;
+//	procedural_parameters_->tile_size = 30;
+//	procedural_parameters_->load_adjacency = 2;
+//	procedural_parameters_->render_adjacency = 1;
+//	procedural_mesh_.resize(procedural_parameters_->rows * procedural_parameters_->columns);
+//}
 void SimpleGenerator::loadTilesAsync(const TileList& tiles)
 {
 	for (auto tile : tiles)
@@ -33,15 +33,15 @@ MeshSection SimpleGenerator::createSomeShit(const int& tile)
 	std::array<int, 6> connection_list{ 0, 1, useful_size, 1, useful_size + 1, useful_size};
 	MeshSection new_mesh_section;
 	int iterator{ 0 };
-	
+
 
 	for (int i = 0; i < useful_size; i++)
 	{
 		for (int j = 0; j < useful_size; j++)
 		{
-			Position relative_position{ float(i)*procedural_parameters_->scale_x, float(j)*procedural_parameters_->scale_y, 0 }; //, sineWave(i, j) * 1000
+			Position relative_position{ float(i)*procedural_parameters_->scale_x, float(j)*procedural_parameters_->scale_y, 0 };
 			auto new_point = start_position + relative_position;
-			new_point.z = 1000*sineWave(new_point.x, new_point.y);
+			new_point.z = perlin(new_point) + 500 * sineWave(new_point);
 			UE_LOG(LogTemp, Log, TEXT("new point: (%f,%f,%f)"), new_point.x, new_point.y, new_point.z);
 			FLinearColor color{ new_point.z / 1000, 0, 1 - new_point.z / 1000 };
 
@@ -75,7 +75,9 @@ MeshSection SimpleGenerator::createSomeShit(const int& tile)
 					new_mesh_section.triangle_list.Add(connection + iterator);
 			}
 			iterator++;
+
 		}
+
 	}
 
 
@@ -88,7 +90,13 @@ float SimpleGenerator::random()
 	return float(rand()) / float(RAND_MAX);
 }
 
-float SimpleGenerator::sineWave(const float& i, const float& j)
+float SimpleGenerator::sineWave(const Position& position)
 {
-	return sin(i/1000) + cos(j/1000);
+	return sin((position.x/(1000*(1+0.5*random())))+random()) + cos((position.y/(1000*(1+0.5*random())))+random());
+}
+
+
+float SimpleGenerator::perlin(const Position& position)
+{
+	return 1000*perlin_noise_.noise(position.x, position.y);
 }

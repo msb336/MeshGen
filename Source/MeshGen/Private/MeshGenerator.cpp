@@ -9,7 +9,8 @@ AMeshGenerator::AMeshGenerator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialOb(TEXT("Material'/MeshGen/generated_material.generated_material'"));
-	material_ = MaterialOb.Object;
+	
+	material_ = MaterialOb.Object; 
 
 	procedural_mesh_component_ = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	procedural_mesh_component_->bUseAsyncCooking = true;
@@ -143,6 +144,8 @@ void AMeshGenerator::renderTilesAsync(const TileList& tiles_to_render)
 		if (tile >= 0)
 		{
 			UE_LOG(LogTemp, Log, TEXT("rendering tile %d"), tile);
+
+
 			if (generator_->procedural_mesh_[tile].populated)
 			{
 				procedural_mesh_component_->SetMaterial(tile, material_);
@@ -193,4 +196,18 @@ void AMeshGenerator::inverseIntersection(const TileList& a, const TileList& b, T
 	std::set_difference(b.begin(), b.end(),
 		a.begin(), a.end(),
 		std::inserter(unique_to_b, unique_to_b.begin()));
+}
+
+
+
+
+///Temporary
+void AMeshGenerator::addWater(const FVector& location)
+{
+	//static ConstructorHelpers::FObjectFinder<UMaterial> MaterialOb(TEXT("Material'/Game/StartContent/Materials/M_Water_Ocean.M_Water_Ocean'"));
+	//UStaticMeshComponent* new_water = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Water"));
+	//UStaticMesh* static_mesh = 
+	//new_water->SetStaticMesh()
+	//new_water->SetupAttachment(RootComponent);
+
 }

@@ -6,7 +6,7 @@
 class DEMConverter : public GeneratorBase
 {
 public:
-	DEMConverter(const GeneratorBase::ConfigurationSettings* config_file);
+	DEMConverter(const GeneratorBase::ConfigurationSettings* config_file) : GeneratorBase(config_file) {};
 
 private:
 	virtual void loadTilesAsync(const TileList&) override;

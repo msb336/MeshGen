@@ -38,6 +38,9 @@ private:
 	void derenderTilesAsync(const TileList& tiles_to_derender);
 	void inverseIntersection(const TileList& a, const TileList& b, TileList& unique_to_a, TileList& unique_to_b);
 
+	//temporary
+	void addWater(const FVector& location);
+
 private:
 	std::unique_ptr<GeneratorBase>  generator_;
 	GeneratorFactory* generator_factory_ = new GeneratorFactory;
