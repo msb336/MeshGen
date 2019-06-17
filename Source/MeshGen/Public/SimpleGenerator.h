@@ -2,6 +2,7 @@
 #include "GeneratorBase.h"
 #include "math.h"
 #include "PerlinNoise.hpp"
+#include <ctime>
 
 class SimpleGenerator : public GeneratorBase
 {
@@ -24,6 +25,6 @@ private:
 	MeshSection createSomeShit(const int& start_position);
 
 private:
-	siv::PerlinNoise perlin_noise_{};
+	siv::PerlinNoise perlin_noise_{ rand() };
 	PerlinParameters* perlin_parameters_ = new PerlinParameters;
 };
