@@ -26,7 +26,6 @@ public:
 			else if (enum_type == "IMAGE")		generator_type = GENERATORTYPE::IMAGE;
 			else if (enum_type == "GAN")		generator_type = GENERATORTYPE::GAN;
 			else if (enum_type == "SIMPLE")		generator_type = GENERATORTYPE::SIMPLE;
-			else								generator_type = GENERATORTYPE::EMPTY;
 		}
 	};
 
